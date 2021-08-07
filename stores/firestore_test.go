@@ -27,12 +27,12 @@ func TestCasesByDateService_Save(t *testing.T) {
 	var raw []rawData
 	var cases []CaseCount
 
-	if err := json.Unmarshal(data, &raw); err != nil {
+	if err := json.Unmarshal(data, &raw); err != nil { //nolint:govet
 		t.Fatalf("failed to unmarshall cases: %v", err)
 	}
 
 	for _, r := range raw {
-		d, err := time.Parse("2006-01-02", r.ID.Date[0:10])
+		d, err := time.Parse("2006-01-02", r.ID.Date[0:10]) //nolint:govet
 		if err != nil {
 			t.Fatalf("parsing date failed: %v", err)
 		}
@@ -56,7 +56,6 @@ func TestCasesByDateService_Save(t *testing.T) {
 	if err := svc.Save(ctx, cases); err != nil {
 		t.Fatalf("saving cases failed: %v", err)
 	}
-
 }
 
 func TestCasesByDateService_FindByMonth(t *testing.T) {
@@ -66,16 +65,12 @@ func TestCasesByDateService_FindByMonth(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to create firestore db: %v", err)
 	}
-
-	// create Service
 	svc := NewCasesByDateService(fsClient, "covid_cases_stats")
-
 	cases, err := svc.FindByMonth(ctx, "2021-08")
 	if err != nil {
 		t.Fatalf("FindByMonth failed: %v", err)
 	}
 	t.Logf("cases: %v", cases)
-
 }
 
 func TestCasesByDateService_FindByYear(t *testing.T) {

@@ -32,12 +32,14 @@ func CreateFirestoreDB(ctx context.Context, projectID string) (*Firestore, error
 	}, nil
 }
 
+// CasesByDateService is a service for manipulating and querying cases
 type CasesByDateService struct {
 	db         *Firestore
 	collection string
 	colRef     *fs.CollectionRef
 }
 
+// NewCasesByDateService creates a new service
 func NewCasesByDateService(db *Firestore, collection string) *CasesByDateService {
 	return &CasesByDateService{
 		db:         db,
@@ -46,6 +48,7 @@ func NewCasesByDateService(db *Firestore, collection string) *CasesByDateService
 	}
 }
 
+// Save persists the cases
 func (c *CasesByDateService) Save(ctx context.Context, cases []CaseCount) error {
 	batch := c.db.Client.Batch()
 
@@ -72,6 +75,7 @@ func (c *CasesByDateService) Save(ctx context.Context, cases []CaseCount) error 
 	return nil
 }
 
+// CasesCountByDate represents the cases as persisted in Firestore
 type CasesCountByDate struct {
 	ReportingDate *time.Time
 	Count         int32
@@ -79,6 +83,7 @@ type CasesCountByDate struct {
 	Month         string
 }
 
+// FindByMonth retrieves all cases for a given month
 func (c *CasesByDateService) FindByMonth(ctx context.Context, month string) ([]CasesCountByDate, error) {
 	var cases []CasesCountByDate
 	iter := c.colRef.Query.Where("month", "==", month).Documents(ctx)
@@ -102,6 +107,7 @@ func (c *CasesByDateService) FindByMonth(ctx context.Context, month string) ([]C
 	return cases, nil
 }
 
+// FindByYear retrieves all cases for a given year
 func (c *CasesByDateService) FindByYear(ctx context.Context, year int32) ([]CasesCountByDate, error) {
 	var cases []CasesCountByDate
 	iter := c.colRef.Query.Where("year", "==", year).Documents(ctx)

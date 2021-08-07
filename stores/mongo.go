@@ -9,6 +9,7 @@ import (
 	"time"
 )
 
+// Mongo represents a mongo client
 type Mongo struct {
 	Database   string
 	URI        string
@@ -21,6 +22,7 @@ func (m *Mongo) personCollection() string {
 	return "person"
 }
 
+// NewMongoStore creates a new mongo connection
 func NewMongoStore(uri, database string) (Mongo, error) {
 	clientOpts := options.Client().ApplyURI(uri)
 	client, err := mn.NewClient(clientOpts)
@@ -39,10 +41,12 @@ func NewMongoStore(uri, database string) (Mongo, error) {
 	}, nil
 }
 
+// Case represents a COVID case
 type Case struct {
 	ReportingDate *time.Time `bson:"dateOfReporting" json:"reportingDate"`
 }
 
+// FindConfirmedCases finds confirmed cases for a given date range
 func (m *Mongo) FindConfirmedCases(ctx context.Context, outbreakID string, reportingDate time.Time, endDate *time.Time) ([]Case, error) {
 	collection := m.Client.Database(m.Database).Collection(m.personCollection())
 	lastDate := endDate
@@ -78,11 +82,13 @@ func (m *Mongo) FindConfirmedCases(ctx context.Context, outbreakID string, repor
 	return cases, nil
 }
 
+// CaseCount represents how many cases were reported on a date
 type CaseCount struct {
 	ReportingDate *time.Time `bson:"_id" json:"reportingDate"`
 	Count         int32      `bson:"count" json:"count"`
 }
 
+// GroupCasesByDate retrieves confirmed cases grouped by the reporting date
 func (m *Mongo) GroupCasesByDate(ctx context.Context, outbreakID string, reportingDate time.Time) ([]CaseCount, error) {
 	var cases []CaseCount
 	collection := m.Client.Database(m.Database).Collection(m.personCollection())
@@ -90,10 +96,10 @@ func (m *Mongo) GroupCasesByDate(ctx context.Context, outbreakID string, reporti
 
 	matchStage := bson.D{
 		{"$match", bson.D{ //nolint:govet
-			{"outbreakId", outbreakID},
-			{"classification", "LNG_REFERENCE_DATA_CATEGORY_CASE_CLASSIFICATION_CONFIRMED"},
-			{"deleted", false},
-			{"$and", bson.A{
+			{"outbreakId", outbreakID}, //nolint:govet
+			{"classification", "LNG_REFERENCE_DATA_CATEGORY_CASE_CLASSIFICATION_CONFIRMED"}, //nolint:govet
+			{"deleted", false}, //nolint:govet
+			{"$and", bson.A{ //nolint:govet
 				bson.M{"dateOfReporting": bson.M{"$gte": reportingDate}},
 				bson.M{"dateOfReporting": bson.M{"$lt": lastDate}},
 			}}},
@@ -101,7 +107,7 @@ func (m *Mongo) GroupCasesByDate(ctx context.Context, outbreakID string, reporti
 	}
 
 	groupStage := bson.D{
-		{"$group", bson.M{
+		{"$group", bson.M{ //nolint:govet
 			"_id":   "$dateOfReporting",
 			"count": bson.M{"$sum": 1},
 		}},

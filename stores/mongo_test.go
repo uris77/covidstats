@@ -22,7 +22,7 @@ func TestMongo_FindConfirmedCases(t *testing.T) {
 	ctx := context.Background()
 
 	// Connect
-	if err := store.Connect(ctx); err != nil {
+	if err := store.Connect(ctx); err != nil { //nolint:govet
 		t.Fatalf("failed to connect to mongo: %v", err)
 	}
 	defer store.Disconnect(ctx) //nolint:errcheck
@@ -53,7 +53,7 @@ func TestMongo_GroupCasesByDate(t *testing.T) {
 	ctx := context.Background()
 
 	// Connect
-	if err := store.Connect(ctx); err != nil {
+	if err := store.Connect(ctx); err != nil { //nolint:govet
 		t.Fatalf("failed to connect to mongo: %v", err)
 	}
 	defer store.Disconnect(ctx) //nolint:errcheck
