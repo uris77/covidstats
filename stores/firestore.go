@@ -119,13 +119,13 @@ func (c *CasesByDateService) FindByYear(ctx context.Context, year int) ([]CasesC
 			break
 		}
 		if err != nil {
-			return cases, fmt.Errorf("FindByMonth() error: %w", err)
+			return cases, fmt.Errorf("FindByYear() error: %w", err)
 		}
 
 		var cs CasesCountByDate
 		dataErr := doc.DataTo(&cs)
 		if dataErr != nil {
-			return cases, fmt.Errorf("FindByMonth: unmarshal error: %w", err)
+			return cases, fmt.Errorf("FindByYear: unmarshal error: %w", err)
 		}
 		cases = append(cases, cs)
 	}

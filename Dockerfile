@@ -5,8 +5,9 @@ RUN set -x && \
     ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
+COPY ./covidstats.json /app/creds.json
+COPY ./bin/server /
 
-COPY ./server /
-COPY ./static /static
+ENV GOOGLE_APPLICATION_CREDENTIALS "/app/creds.json"
 
 CMD /server
