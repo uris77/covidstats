@@ -1,12 +1,13 @@
 package stores
 
 import (
-	fs "cloud.google.com/go/firestore"
 	"context"
 	"errors"
 	"fmt"
-	"google.golang.org/api/iterator"
 	"time"
+
+	fs "cloud.google.com/go/firestore"
+	"google.golang.org/api/iterator"
 )
 
 // Firestore represents the database connection.
@@ -108,7 +109,7 @@ func (c *CasesByDateService) FindByMonth(ctx context.Context, month string) ([]C
 }
 
 // FindByYear retrieves all cases for a given year
-func (c *CasesByDateService) FindByYear(ctx context.Context, year int32) ([]CasesCountByDate, error) {
+func (c *CasesByDateService) FindByYear(ctx context.Context, year int) ([]CasesCountByDate, error) {
 	var cases []CasesCountByDate
 	iter := c.colRef.Query.Where("year", "==", year).Documents(ctx)
 
