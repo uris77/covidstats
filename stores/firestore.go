@@ -61,10 +61,13 @@ func (c *CasesByDateService) Save(ctx context.Context, cases []CaseCount) error 
 		if month < 10 {
 			monthStr = fmt.Sprintf("0%d", month)
 		}
+		yr, week := cs.ReportingDate.ISOWeek()
+		wk := fmt.Sprintf("%d-%d", yr, week)
 		batch.Set(ref, map[string]interface{}{
 			"reportingDate": cs.ReportingDate,
 			"count":         cs.Count,
 			"year":          cs.ReportingDate.Year(),
+			"week":          wk,
 			"month":         fmt.Sprintf("%d-%s", cs.ReportingDate.Year(), monthStr),
 		}, fs.MergeAll)
 	}
@@ -78,10 +81,11 @@ func (c *CasesByDateService) Save(ctx context.Context, cases []CaseCount) error 
 
 // CasesCountByDate represents the cases as persisted in Firestore
 type CasesCountByDate struct {
-	ReportingDate *time.Time
-	Count         int32
-	Year          int32
-	Month         string
+	ReportingDate *time.Time `json:"reportingDate"`
+	Count         int        `json:"count"`
+	Year          int        `json:"year"`
+	Month         string     `json:"month"`
+	Week          string     `json:"week"`
 }
 
 // FindByMonth retrieves all cases for a given month
