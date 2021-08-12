@@ -21,7 +21,7 @@ func TestCasesByDateService_Save(t *testing.T) {
 
 	type rawData struct {
 		ID    rawDataID `json:"_id"`
-		Count int32     `json:"count"`
+		Count int       `json:"count"`
 	}
 
 	var raw []rawData
@@ -70,7 +70,7 @@ func TestCasesByDateService_FindByMonth(t *testing.T) {
 	if err != nil {
 		t.Fatalf("FindByMonth failed: %v", err)
 	}
-	t.Logf("cases: %v", cases)
+	t.Logf("cases: %v", len(cases))
 }
 
 func TestCasesByDateService_FindByYear(t *testing.T) {

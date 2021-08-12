@@ -3,10 +3,11 @@ package stores
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"go.mongodb.org/mongo-driver/bson"
 	mn "go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"time"
 )
 
 // Mongo represents a mongo client
@@ -85,7 +86,7 @@ func (m *Mongo) FindConfirmedCases(ctx context.Context, outbreakID string, repor
 // CaseCount represents how many cases were reported on a date
 type CaseCount struct {
 	ReportingDate *time.Time `bson:"_id" json:"reportingDate"`
-	Count         int32      `bson:"count" json:"count"`
+	Count         int        `bson:"count" json:"count"`
 }
 
 // GroupCasesByDate retrieves confirmed cases grouped by the reporting date
