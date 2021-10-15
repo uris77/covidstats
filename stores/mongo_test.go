@@ -2,8 +2,6 @@ package stores
 
 import (
 	"context"
-	"encoding/json"
-	"io/ioutil"
 	"os"
 	"testing"
 	"time"
@@ -28,15 +26,17 @@ func TestMongo_FindConfirmedCases(t *testing.T) {
 	}
 	defer store.Disconnect(ctx) //nolint:errcheck
 
-	reportingDate, _ := time.Parse(isoLayout, "2021-06-01")
+	reportingDate, _ := time.Parse(isoLayout, "2021-08-10")
 	lastDate, _ := time.Parse(isoLayout, "2021-09-01")
 	cases, err := store.FindConfirmedCases(ctx, outbreakID, reportingDate, &lastDate)
 	if err != nil {
 		t.Fatalf("finding cases failed: %v", err)
 	}
 
-	file, _ := json.MarshalIndent(cases, "", "  ")
-	_ = ioutil.WriteFile("cases.json", file, 0600)
+	//file, _ := json.MarshalIndent(cases, "", "  ")
+	//_ = ioutil.WriteFile("cases.json", file, 0600)
+	//cs := store.addDistrictToCases(cases)
+	t.Logf("Cases: %v", cases)
 }
 
 func TestMongo_GroupCasesByDate(t *testing.T) {
@@ -81,7 +81,7 @@ func TestMongo_Upload(t *testing.T) {
 	}
 	defer store.Disconnect(ctx) //nolint:errcheck
 
-	reportingDate, _ := time.Parse(isoLayout, "2021-08-11")
+	reportingDate, _ := time.Parse(isoLayout, "2021-10-14")
 	cases, err := store.GroupCasesByDate(ctx, outbreakID, reportingDate)
 	if err != nil {
 		t.Fatalf("grouping cases failed: %v", err)
