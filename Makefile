@@ -3,9 +3,9 @@ buildGCR: buildLinux
 deployCloudRun:
 	gcloud run deploy --image gcr.io/epi-belize/covidstats --platform managed --service-account covidstats@epi-belize.iam.gserviceaccount.com --set-env-vars GCP_PROJECT_ID=epi-belize --memory 1024
 buildLocal:
-	go build -mod=readonly -o bin/server cmd/main.go
+	go build -mod=readonly -o bin/server cmd/http/main.go
 buildLinux:
-	GOOS=linux GOARCH=amd64 go build -mod=readonly -o bin/server cmd/main.go
+	GOOS=linux GOARCH=amd64 go build -mod=readonly -o bin/server cmd/http/main.go
 dockerBuild: buildLinux
 	docker build -t gcr.io/epi-belize/covidstats .
 dockerRun:
